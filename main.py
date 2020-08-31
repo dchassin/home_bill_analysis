@@ -4,7 +4,7 @@ with open(f"{config.data}/index.json") as fh:
     index = json.load(fh)
 
 def noaa_to_date(t):
-    return datetime.datetime.fromisoformat(t)
+    return datetime.datetime.strptime(t,"%Y-%m-%dT%H:%M:%S")
 
 def noaa_to_temperature(t):
     try:

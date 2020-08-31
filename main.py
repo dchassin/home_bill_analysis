@@ -3,6 +3,8 @@ import os, config, json, datetime, pandas, pwlf, scipy, matplotlib.pyplot as plo
 with open(f"{config.data}/index.json") as fh:
     index = json.load(fh)
 
+tzdiff = round(datetime.datetime.utcnow().timestamp()-datetime.datetime.now().timestamp())/3600
+
 def noaa_to_date(t):
     return datetime.datetime.strptime(t,"%Y-%m-%dT%H:%M:%S")
 
@@ -25,7 +27,7 @@ for file in os.listdir(config.data):
                 'USAGE' : float,
             }
             )
-        usage['INDEX'] = usage[['DATE','START TIME']].apply(lambda dt: int(datetime.datetime.strptime(' '.join(dt),'%Y-%m-%d %H:%M').timestamp()/3600)-config.timezone,axis=1)
+        usage['INDEX'] = usage[['DATE','START TIME']].apply(lambda dt: int(datetime.datetime.strptime(' '.join(dt),'%Y-%m-%d %H:%M').timestamp()/3600)-tzdiff,axis=1)
         usage['DT'] = ((usage[['DATE','END TIME']].apply(lambda dt: datetime.datetime.strptime(' '.join(dt),'%Y-%m-%d %H:%M').timestamp(),axis=1) - usage[['DATE','START TIME']].apply(lambda dt: datetime.datetime.strptime(' '.join(dt),'%Y-%m-%d %H:%M').timestamp(),axis=1))+60)/3600
         usage['USAGE'] = usage['USAGE'] / usage['DT']
         usage.set_index(keys='INDEX',inplace=True)

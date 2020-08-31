@@ -4,7 +4,7 @@ with open(f"{config.data}/index.json") as fh:
     index = json.load(fh)
 
 def noaa_to_date(t):
-    return datetime.datetime.fromisoformat(t)
+    return datetime.datetime.strptime(t,"%Y-%m-%dT%H:%M:%S")
 
 def noaa_to_temperature(t):
     try:
@@ -66,19 +66,25 @@ for file in os.listdir(config.data):
             Tc = Tc[1:]
         print(f"Temperature sensitivity above {Tc[0]:.0f} degF: {Sc*1000:.0f} W/degF")
 
-        fig, ax = plot.subplots(1,2,figsize=(13,5))
+        fig, ax = plot.subplots(2,2,figsize=(13,13))
 
-        ax[0].plot(T,P,'.')
-        ax[0].grid()
-        ax[0].set_xlabel('Outdoor temperature (degF)')
-        ax[0].set_ylabel('Energy usage (kWh/h)')
-        ax[0].plot(Tc,fit.predict(Tc),linewidth=2,color='black')
+        ax[0][0].plot(T,P,'.')
+        ax[0][0].grid()
+        ax[0][0].set_xlabel('Outdoor temperature (degF)')
+        ax[0][0].set_ylabel('Energy usage (kWh/h)')
+        ax[0][0].plot(Tc,fit.predict(Tc),linewidth=2,color='black')
 
-        ax[1].plot(h,P,'.')
-        ax[1].grid()
-        ax[1].set_xlabel('Hour of day')
-        ax[1].set_ylabel('Energy usage (kWh/h)')
-        ax[1].plot(range(24),data.set_index('HOUROFDAY').groupby('HOUROFDAY')['USAGE'].mean(),linewidth=2,color='black')
+        ax[0][1].plot(h,P,'.')
+        ax[0][1].grid()
+        ax[0][1].set_xlabel('Hour of day')
+        ax[0][1].set_ylabel('Energy usage (kWh/h)')
+        ax[0][1].plot(range(24),data.set_index('HOUROFDAY').groupby('HOUROFDAY')['USAGE'].mean(),linewidth=2,color='black')
+
+        ax[1][0].plot(h,T,'.')
+        ax[1][0].grid()
+        ax[1][0].set_xlabel('Hour of day')
+        ax[1][0].set_ylabel('Outdoor temperature (degF)')
+        ax[1][0].plot(range(24),data.set_index('HOUROFDAY').groupby('HOUROFDAY')['TEMPERATURE'].mean(),linewidth=2,color='black')
 
         fig.savefig(f"{account}.png");
 

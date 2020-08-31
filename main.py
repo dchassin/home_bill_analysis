@@ -66,7 +66,6 @@ for file in os.listdir(config.data):
         else:
             Sc = Sc[1]
             Tc = Tc[1:]
-        print(f"Temperature sensitivity above {Tc[0]:.0f} degF: {Sc*1000:.0f} W/degF")
 
         fig, ax = plot.subplots(2,2,figsize=(13,13))
 
@@ -74,7 +73,8 @@ for file in os.listdir(config.data):
         ax[0][0].grid()
         ax[0][0].set_xlabel('Outdoor temperature (degF)')
         ax[0][0].set_ylabel('Energy usage (kWh/h)')
-        ax[0][0].plot(Tc,fit.predict(Tc),linewidth=2,color='black')
+        ax[0][0].plot(Tc,fit.predict(Tc),linewidth=2,color='black',label=f"{Sc*1000:.0f} W/degF (>{Tc[0]:.0f} degF)")
+        ax[0][0].legend();
 
         ax[0][1].plot(h,P,'.')
         ax[0][1].grid()

@@ -36,5 +36,5 @@ jobs:
       - name: Results
         uses: actions/upload-artifact@v2
         with:
-          name: sample.png
-          path: sample.png
+          name: SAMPLE.png
+          path: SAMPLE.png

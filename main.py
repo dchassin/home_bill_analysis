@@ -17,7 +17,7 @@ def noaa_to_temperature(t):
 
 for file in os.listdir(config.data):
     filespec = file.split('.')[0].split('_')
-    if filespec[0:4] == ['pge','electric','interval','data']:
+    if filespec[0:4] == ['pge','electric','interval','data'] and filespec[4] in config.account:
         usage = pandas.read_csv(f"{config.data}/{file}",
             header = 4,
             usecols = ['DATE','START TIME','END TIME','USAGE'],

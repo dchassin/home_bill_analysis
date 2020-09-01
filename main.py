@@ -51,6 +51,8 @@ for file in os.listdir(config.data):
 
         data = weather.join(usage).dropna()
         data['HOUROFDAY'] = data.index % 24
+        data['DATE'] = data[['DATE']].apply(lambda dt: datetime.datetime(dt[0].year,dt[0].month,dt[0].day,dt[0].hour),axis=1)
+        data.drop_duplicates(subset=['HOUROFDAY','TEMPERATURE','USAGE'],inplace=True)
 
         t = data['DATE']
         h = data['HOUROFDAY']
@@ -89,5 +91,7 @@ for file in os.listdir(config.data):
         ax[1][0].plot(range(24),data.set_index('HOUROFDAY').groupby('HOUROFDAY')['TEMPERATURE'].mean(),linewidth=2,color='black')
 
         fig.savefig(f"{account}.png");
+
+        data.to_csv(f"{account}.csv");
 
 
